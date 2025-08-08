@@ -36,7 +36,6 @@ const AuthForm = () => {
     setError("");
   };
 
-  // Sign up with email and password
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
@@ -54,7 +53,6 @@ const AuthForm = () => {
     }
   };
 
-  // Login with email and password
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -69,7 +67,6 @@ const AuthForm = () => {
     }
   };
 
-  // Google sign-in
   const handleGoogleSignIn = async () => {
     setError("");
     setLoading(true);
@@ -84,16 +81,16 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 px-6">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-10 border border-gray-200">
-        <h2 className="text-3xl font-extrabold text-center mb-10 text-gray-900 drop-shadow-md">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 px-4 sm:px-8">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border border-gray-300">
+        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-900 tracking-tight drop-shadow-md">
           {mode === "login" ? "Welcome Back!" : "Create Your Account"}
         </h2>
-        <div className="flex justify-center mb-8">
+        <div className="flex rounded-full overflow-hidden shadow-lg mb-6 max-w-xs mx-auto">
           <button
-            className={`px-6 py-3 text-lg font-semibold rounded-l-full focus:outline-none transition ${
+            className={`flex-1 py-2 text-lg font-semibold text-center transition-colors duration-300 focus:outline-none ${
               mode === "login"
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-300"
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-400"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
             onClick={() => {
@@ -105,9 +102,9 @@ const AuthForm = () => {
             Login
           </button>
           <button
-            className={`px-6 py-3 text-lg font-semibold rounded-r-full focus:outline-none transition ${
+            className={`flex-1 py-2 text-lg font-semibold text-center transition-colors duration-300 focus:outline-none ${
               mode === "signup"
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-300"
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-400"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
             onClick={() => {
@@ -122,7 +119,7 @@ const AuthForm = () => {
         <form onSubmit={mode === "login" ? handleLogin : handleSignup} className="space-y-6">
           {mode === "signup" && (
             <div>
-              <label htmlFor="displayName" className="block text-gray-700 font-medium mb-1">
+              <label htmlFor="displayName" className="block text-gray-700 font-semibold mb-1 text-base">
                 Name
               </label>
               <input
@@ -133,12 +130,13 @@ const AuthForm = () => {
                 onChange={(e) => setDisplayName(e.target.value)}
                 required={mode === "signup"}
                 disabled={loading}
-                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                className="w-full rounded-xl border border-gray-300 px-3 py-2 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                autoComplete="name"
               />
             </div>
           )}
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-1">
+            <label htmlFor="email" className="block text-gray-700 font-semibold mb-1 text-base">
               Email Address
             </label>
             <input
@@ -149,11 +147,12 @@ const AuthForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full rounded-xl border border-gray-300 px-3 py-2 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              autoComplete="email"
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-1">
+            <label htmlFor="password" className="block text-gray-700 font-semibold mb-1 text-base">
               Password
             </label>
             <input
@@ -165,7 +164,8 @@ const AuthForm = () => {
               required
               disabled={loading}
               minLength={6}
-              className="w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              className="w-full rounded-xl border border-gray-300 px-3 py-2 text-base placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
             />
           </div>
           {error && (
@@ -174,20 +174,20 @@ const AuthForm = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full shadow-md transition"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2 rounded-xl shadow-md text-base transition"
           >
             {loading ? "Please wait..." : mode === "login" ? "Login" : "Sign Up"}
           </button>
         </form>
         <div className="mt-8 text-center">
-          <p className="mb-4 text-gray-600 text-sm font-medium">or continue with</p>
+          <p className="mb-4 text-gray-700 text-sm font-medium">Or continue with</p>
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="flex items-center justify-center w-full border border-gray-300 rounded-full py-3 hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="flex items-center justify-center w-full border border-gray-300 rounded-full py-2 shadow-sm hover:shadow-md hover:bg-gray-100 transition disabled:opacity-60 disabled:cursor-not-allowed text-sm"
           >
             <svg
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 mr-2"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 488 512"
               fill="currentColor"
