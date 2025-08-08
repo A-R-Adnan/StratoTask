@@ -46,6 +46,9 @@ const Dashboard = () => {
         isLoggingOut={isLoggingOut}
       />
    
+      <div className="flex-grow overflow-auto mt-6">
+        <ListsContainer />
+      </div>
 
       {settingsOpen && currentUser && (
         <SettingsModal
