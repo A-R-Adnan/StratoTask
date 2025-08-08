@@ -6,6 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import BoardHeader from "../components/BoardHeader";
 
 import SettingsModal from "../components/SettingsModal";
+import ListsContainer from "../components/ListsContainer";
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
@@ -44,8 +45,7 @@ const Dashboard = () => {
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
       />
-
-      
+   
 
       {settingsOpen && currentUser && (
         <SettingsModal
