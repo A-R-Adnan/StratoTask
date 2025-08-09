@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import AuthForm from "./components/AuthForm";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./routes/PrivateRoute";
 
 const App = () => {
@@ -25,6 +25,7 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+            {/* Redirect unknown routes to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
