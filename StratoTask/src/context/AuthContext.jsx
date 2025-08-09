@@ -5,6 +5,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 // Create the AuthContext
 export const AuthContext = createContext(null);
 
+// AuthProvider component to wrap around your app and provide auth state
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }) => {
       setCurrentUser(user || null);
       setLoading(false);
     });
+    // Cleanup subscription on unmount
     return unsubscribe;
   }, []);
 
