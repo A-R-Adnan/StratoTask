@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState, useContext } from "react";
 import { auth } from "../firebase/config";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
-// Create the AuthContext as a named export
+// Create the AuthContext
 export const AuthContext = createContext(null);
 
 // AuthProvider component to wrap around your app and provide auth state
@@ -11,18 +11,19 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Subscribe to Firebase auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      setCurrentUser(user || null);
       setLoading(false);
     });
     // Cleanup subscription on unmount
     return unsubscribe;
   }, []);
 
+  // Centralized logout method
+  const logout = () => signOut(auth);
+
   return (
-    <AuthContext.Provider value={{ currentUser }}>
-      {/* Render children only once loading is complete */}
+    <AuthContext.Provider value={{ currentUser, loading, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );
