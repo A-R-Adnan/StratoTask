@@ -1,19 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/config";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext"; // use context hook instead of raw auth import
 
 import BoardHeader from "../components/BoardHeader";
-
-import SettingsModal from "../components/SettingsModal";
 import ListsContainer from "../components/ListsContainer";
+import SettingsModal from "../components/SettingsModal";
 
 const Dashboard = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
   const [userName, setUserName] = useState(currentUser?.displayName || "User");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsMode, setSettingsMode] = useState("profile"); // NEW: track which setting was clicked
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
@@ -23,8 +22,7 @@ const Dashboard = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      await auth.signOut();
-      // Close modal or any open UI as needed
+      await logout();
       setSettingsOpen(false);
       navigate("/auth?mode=login");
     } catch (error) {
@@ -37,15 +35,32 @@ const Dashboard = () => {
     setUserName(newName);
   };
 
+  // Handle opening modal from Profile click
+  const handleProfileClick = () => {
+    setSettingsMode("profile");
+    setSettingsOpen(true);
+  };
+
+  // Handle opening modal from Change Name click
+  const handleChangeNameClick = () => {
+    setSettingsMode("changeName");
+    setSettingsOpen(true);
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 p-6 flex flex-col">
       <BoardHeader
         userName={userName}
-        onOpenSettings={() => setSettingsOpen(true)}
+        onProfileClick={handleProfileClick}
+        onChangeNameClick={handleChangeNameClick}
+        onAddList={() => console.log("TODO: Add list handler")}
+        onSearchChange={(val) => console.log("Search:", val)}
+        searchValue=""
+        onClearSearch={() => console.log("Clear search")}
         onLogout={handleLogout}
         isLoggingOut={isLoggingOut}
       />
-   
+
       <div className="flex-grow overflow-auto mt-6">
         <ListsContainer />
       </div>
@@ -53,6 +68,7 @@ const Dashboard = () => {
       {settingsOpen && currentUser && (
         <SettingsModal
           user={currentUser}
+          mode={settingsMode} // Pass mode in case modal wants to show specific section
           onClose={() => setSettingsOpen(false)}
           onNameChanged={handleNameChanged}
         />
