@@ -116,11 +116,6 @@ _Trello-inspired + custom ideas for StratoTask:_
 ### 🔄 Offline/PWA
 - Full offline support + auto sync when online
 
----
-
-## 📜 License
-
-MIT — see the LICENSE file for details.
 
 ---
 
