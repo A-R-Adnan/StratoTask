@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/useAuth"; // use context hook instead of raw auth import
+import { useAuth } from "../context/useAuth";
 
 import BoardHeader from "../components/BoardHeader";
 import ListsContainer from "../components/ListsContainer";
@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const [userName, setUserName] = useState(currentUser?.displayName || "User");
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsMode, setSettingsMode] = useState("profile"); // NEW: track which setting was clicked
+  const [settingsMode, setSettingsMode] = useState("profile");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
@@ -24,57 +24,48 @@ const Dashboard = () => {
     try {
       await logout();
       setSettingsOpen(false);
-      navigate("/"); // ✅ redirect to home
+      navigate("/");
     } catch (error) {
       alert("Error logging out: " + error.message);
       setIsLoggingOut(false);
     }
   };
-  
 
-  const handleNameChanged = (newName) => {
-    setUserName(newName);
-  };
-
-  // Handle opening modal from Profile click
-  const handleProfileClick = () => {
-    setSettingsMode("profile");
-    setSettingsOpen(true);
-  };
-
-  // Handle opening modal from Change Name click
-  const handleChangeNameClick = () => {
-    setSettingsMode("changeName");
-    setSettingsOpen(true);
-  };
+  const handleNameChanged = (newName) => setUserName(newName);
+  const handleProfileClick = () => { setSettingsMode("profile"); setSettingsOpen(true); };
+  const handleChangeNameClick = () => { setSettingsMode("changeName"); setSettingsOpen(true); };
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 flex flex-col">
-      <BoardHeader
-        userName={userName}
-        onProfileClick={handleProfileClick}
-        onChangeNameClick={handleChangeNameClick}
-        onAddList={() => console.log("TODO: Add list handler")}
-        onSearchChange={(val) => console.log("Search:", val)}
-        searchValue=""
-        onClearSearch={() => console.log("Clear search")}
-        onLogout={handleLogout}
-        isLoggingOut={isLoggingOut}
-      />
-
-      <div className="flex-grow overflow-auto mt-6">
-        <ListsContainer />
-      </div>
-
-      {settingsOpen && currentUser && (
-        <SettingsModal
-          user={currentUser}
-          mode={settingsMode} // Pass mode in case modal wants to show specific section
-          onClose={() => setSettingsOpen(false)}
-          onNameChanged={handleNameChanged}
+    <div className="min-h-screen relative bg-gradient-to-tr from-indigo-400/30 via-blue-200/60 to-pink-100/70 pb-12">
+      {/* Blurred pastel blob background */}
+      <div className="absolute -top-60 -left-32 w-[700px] h-[500px] bg-indigo-300 rounded-full opacity-50 blur-3xl" />
+      <div className="absolute -bottom-40 right-0 w-[500px] h-[300px] bg-pink-200 rounded-full opacity-30 blur-3xl" />
+      {/* Main Kanban Area */}
+      <main className="relative z-10 flex flex-col min-h-screen">
+        <BoardHeader
+          userName={userName}
+          onProfileClick={handleProfileClick}
+          onChangeNameClick={handleChangeNameClick}
+          onAddList={() => {}} // Provided by ListsContainer
+          onSearchChange={() => {}}
+          searchValue=""
+          onClearSearch={() => {}}
+          onLogout={handleLogout}
+          isLoggingOut={isLoggingOut}
         />
-      )}
-    </main>
+        <div className="flex-grow flex flex-col">
+          <ListsContainer />
+        </div>
+        {settingsOpen && currentUser && (
+          <SettingsModal
+            user={currentUser}
+            mode={settingsMode}
+            onClose={() => setSettingsOpen(false)}
+            onNameChanged={handleNameChanged}
+          />
+        )}
+      </main>
+    </div>
   );
 };
 
