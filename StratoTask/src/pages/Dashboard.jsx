@@ -32,30 +32,45 @@ const Dashboard = () => {
   };
 
   const handleNameChanged = (newName) => setUserName(newName);
-  const handleProfileClick = () => { setSettingsMode("profile"); setSettingsOpen(true); };
-  const handleChangeNameClick = () => { setSettingsMode("changeName"); setSettingsOpen(true); };
+
+  const handleProfileClick = () => {
+    setSettingsMode("profile");
+    setSettingsOpen(true);
+  };
+
+  const handleChangeNameClick = () => {
+    setSettingsMode("changeName");
+    setSettingsOpen(true);
+  };
 
   return (
     <div className="min-h-screen relative bg-gradient-to-tr from-indigo-400/30 via-blue-200/60 to-pink-100/70 pb-12">
-      {/* Blurred pastel blob background */}
+      {/* Blurred pastel blobs */}
       <div className="absolute -top-60 -left-32 w-[700px] h-[500px] bg-indigo-300 rounded-full opacity-50 blur-3xl" />
       <div className="absolute -bottom-40 right-0 w-[500px] h-[300px] bg-pink-200 rounded-full opacity-30 blur-3xl" />
-      {/* Main Kanban Area */}
-      <main className="relative z-10 flex flex-col min-h-screen">
-        <BoardHeader
-          userName={userName}
-          onProfileClick={handleProfileClick}
-          onChangeNameClick={handleChangeNameClick}
-          onAddList={() => {}} // Provided by ListsContainer
-          onSearchChange={() => {}}
-          searchValue=""
-          onClearSearch={() => {}}
-          onLogout={handleLogout}
-          isLoggingOut={isLoggingOut}
-        />
-        <div className="flex-grow flex flex-col">
+
+      <main className="relative z-10 flex flex-col min-h-screen max-w-full">
+        {/* Sticky glassy header */}
+        <div className="sticky top-0 z-30 backdrop-blur-md bg-white/70 border-b border-indigo-200 shadow-md rounded-b-3xl">
+          <BoardHeader
+            userName={userName}
+            onProfileClick={handleProfileClick}
+            onChangeNameClick={handleChangeNameClick}
+            onLogout={handleLogout}
+            isLoggingOut={isLoggingOut}
+            onAddList={() => {}}
+            onSearchChange={() => {}}
+            searchValue=""
+            onClearSearch={() => {}}
+          />
+        </div>
+
+        {/* Content fills the remaining space */}
+        <div className="flex-grow overflow-auto px-6 py-8">
           <ListsContainer />
         </div>
+
+        {/* Settings modal */}
         {settingsOpen && currentUser && (
           <SettingsModal
             user={currentUser}

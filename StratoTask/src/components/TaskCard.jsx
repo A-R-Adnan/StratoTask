@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  FaTrashAlt, FaChevronDown,
-  FaCheckCircle, FaClock, FaClipboardList,
+  FaTrashAlt,
+  FaChevronDown,
+  FaCheckCircle,
+  FaClock,
+  FaClipboardList,
 } from "react-icons/fa";
 
 const statusOptions = [
@@ -9,26 +12,30 @@ const statusOptions = [
     value: "To do",
     label: "To do",
     color: "bg-red-100 text-red-700",
-    progress: "bg-red-500",
+    progress: "bg-gradient-to-r from-red-400 to-red-500",
     icon: <FaClipboardList aria-hidden="true" />,
   },
   {
     value: "In Progress",
     label: "In Progress",
     color: "bg-yellow-100 text-yellow-800",
-    progress: "bg-yellow-500",
+    progress: "bg-gradient-to-r from-yellow-400 to-yellow-500",
     icon: <FaClock aria-hidden="true" />,
   },
   {
     value: "Done",
     label: "Done",
     color: "bg-green-100 text-green-700",
-    progress: "bg-green-500",
+    progress: "bg-gradient-to-r from-green-400 to-green-500",
     icon: <FaCheckCircle aria-hidden="true" />,
   },
 ];
 
-const statusProgress = { "To do": 0, "In Progress": 50, "Done": 100 };
+const statusProgress = {
+  "To do": 0,
+  "In Progress": 50,
+  Done: 100,
+};
 
 const TaskCard = ({ task, onChangeStatus, onRemove }) => {
   const [selectOpen, setSelectOpen] = useState(false);
@@ -48,22 +55,25 @@ const TaskCard = ({ task, onChangeStatus, onRemove }) => {
 
   return (
     <div
-      className={`relative bg-white/80 rounded-2xl px-5 pt-4 pb-3 shadow-md border border-gray-100 flex items-center gap-4 group transition hover:shadow-indigo-200 animate-fadeIn`}
+      className={`relative bg-white/50 backdrop-blur-lg rounded-2xl px-5 pt-4 pb-3 shadow-md border border-indigo-100 flex items-center gap-4 group transition-all duration-300 hover:shadow-lg hover:scale-[1.01] focus-within:shadow-indigo-300 animate-fadeIn`}
       tabIndex={0}
       aria-label={`Task: ${task.title}, status: ${task.status}`}
     >
+      {/* Title */}
       <span
-        className={`flex-1 text-gray-800 font-semibold truncate text-base pr-2 ${
+        className={`flex-1 text-gray-800 font-medium truncate text-base pr-2 ${
           task.status === "Done" ? "line-through text-gray-400" : ""
         }`}
         title={task.title}
       >
         {task.title}
       </span>
+
+      {/* Status Dropdown */}
       <div className="relative" ref={selectRef}>
         <button
           onClick={() => setSelectOpen((v) => !v)}
-          className={`flex items-center gap-2 text-sm py-1.5 px-3 rounded-full ${currentStatus.color} shadow border font-medium hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition`}
+          className={`flex items-center gap-2 text-sm py-1.5 px-3 rounded-full ${currentStatus.color} shadow border font-medium hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition`}
           aria-haspopup="listbox"
           aria-expanded={selectOpen}
           aria-label="Change task status"
@@ -73,9 +83,10 @@ const TaskCard = ({ task, onChangeStatus, onRemove }) => {
           {currentStatus.label}
           <FaChevronDown className="text-xs opacity-70" aria-hidden="true" />
         </button>
+
         {selectOpen && (
           <ul
-            className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-xl z-50 animate-fadeIn overflow-hidden"
+            className="absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn"
             role="listbox"
             tabIndex={-1}
           >
@@ -86,7 +97,7 @@ const TaskCard = ({ task, onChangeStatus, onRemove }) => {
                   onChangeStatus(task.id, value);
                   setSelectOpen(false);
                 }}
-                className={`flex items-center gap-2 cursor-pointer py-2 px-3 ${color} hover:bg-indigo-50 transition`}
+                className={`flex items-center gap-2 cursor-pointer py-2 px-3 ${color} hover:opacity-80 transition`}
                 role="option"
                 aria-selected={currentStatus.value === value}
                 tabIndex={0}
@@ -104,18 +115,21 @@ const TaskCard = ({ task, onChangeStatus, onRemove }) => {
           </ul>
         )}
       </div>
+
+      {/* Delete Button */}
       <button
         onClick={() => onRemove(task.id)}
-        className="p-2 rounded-full hover:bg-red-100 text-red-500 hover:text-red-700 transition group-hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400"
+        className="p-2 rounded-full hover:bg-red-100 text-red-500 hover:text-red-700 transition transform group-hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400"
         title="Delete task"
         aria-label="Delete task"
         type="button"
       >
         <FaTrashAlt />
       </button>
-      {/* Progress bar */}
+
+      {/* Progress Bar */}
       <div className="absolute bottom-0 left-0 w-full px-3 pb-1 select-none">
-        <div className="w-full bg-gray-100 rounded-full h-1 overflow-hidden">
+        <div className="w-full bg-gray-100/80 rounded-full h-1 overflow-hidden">
           <div
             className={`h-1 rounded-full transition-all duration-300 ${currentStatus.progress}`}
             style={{ width: statusProgress[task.status] + "%" }}
