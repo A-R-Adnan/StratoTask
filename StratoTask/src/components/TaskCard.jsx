@@ -1,115 +1,141 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaTrashAlt, FaSpinner } from "react-icons/fa";
+import {
+  FaTrashAlt,
+  FaChevronDown,
+  FaCheckCircle,
+  FaClock,
+  FaClipboardList,
+} from "react-icons/fa";
 
 const statusOptions = [
-  { value: "To do", label: "To do", color: "bg-red-200 text-red-800" },
-  { value: "In Progress", label: "In Progress", color: "bg-yellow-200 text-yellow-800" },
-  { value: "Done", label: "Done", color: "bg-green-200 text-green-800" },
+  {
+    value: "To do",
+    label: "To do",
+    color: "bg-red-100 text-red-700",
+    progress: "bg-gradient-to-r from-red-400 to-red-500",
+    icon: <FaClipboardList aria-hidden="true" />,
+  },
+  {
+    value: "In Progress",
+    label: "In Progress",
+    color: "bg-yellow-100 text-yellow-800",
+    progress: "bg-gradient-to-r from-yellow-400 to-yellow-500",
+    icon: <FaClock aria-hidden="true" />,
+  },
+  {
+    value: "Done",
+    label: "Done",
+    color: "bg-green-100 text-green-700",
+    progress: "bg-gradient-to-r from-green-400 to-green-500",
+    icon: <FaCheckCircle aria-hidden="true" />,
+  },
 ];
+
+const statusProgress = {
+  "To do": 0,
+  "In Progress": 50,
+  Done: 100,
+};
 
 const TaskCard = ({ task, onChangeStatus, onRemove }) => {
   const [selectOpen, setSelectOpen] = useState(false);
   const selectRef = useRef(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (selectRef.current && !selectRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (selectRef.current && !selectRef.current.contains(e.target)) {
         setSelectOpen(false);
       }
     };
-    if (selectOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    if (selectOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [selectOpen]);
 
-  const currentStatus = statusOptions.find(s => s.value === task.status);
-
-  // Accessibility: open dropdown on key press (Enter or Space) on badge
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      setSelectOpen(open => !open);
-    }
-  };
+  const currentStatus = statusOptions.find((s) => s.value === task.status);
 
   return (
     <div
-      className="bg-white rounded-lg p-4 shadow-md flex items-center justify-between gap-4
-                 hover:shadow-lg transition-shadow duration-300"
-      role="listitem"
+      className={`relative bg-white/50 backdrop-blur-lg rounded-2xl px-5 pt-4 pb-3 shadow-md border border-indigo-100 flex items-center gap-4 group transition-all duration-300 hover:shadow-lg hover:scale-[1.01] focus-within:shadow-indigo-300 animate-fadeIn`}
+      tabIndex={0}
       aria-label={`Task: ${task.title}, status: ${task.status}`}
     >
-      <span className="flex-1 text-gray-900 font-semibold truncate">{task.title}</span>
-
-      {/* Status badge and dropdown container */}
-      <div
-        className="relative"
-        ref={selectRef}
+      {/* Title */}
+      <span
+        className={`flex-1 text-gray-800 font-medium truncate text-base pr-2 ${
+          task.status === "Done" ? "line-through text-gray-400" : ""
+        }`}
+        title={task.title}
       >
-        {/* Status badge */}
+        {task.title}
+      </span>
+
+      {/* Status Dropdown */}
+      <div className="relative" ref={selectRef}>
         <button
-          type="button"
-          onClick={() => setSelectOpen(open => !open)}
-          onKeyDown={handleKeyDown}
+          onClick={() => setSelectOpen((v) => !v)}
+          className={`flex items-center gap-2 text-sm py-1.5 px-3 rounded-full ${currentStatus.color} shadow border font-medium hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition`}
           aria-haspopup="listbox"
           aria-expanded={selectOpen}
-          aria-label={`Change status of ${task.title}, current status ${task.status}`}
-          className={`cursor-pointer select-none text-sm font-semibold py-1.5 px-3 rounded-full transition-colors 
-                        focus:outline-none focus:ring-2 focus:ring-indigo-400 ${currentStatus.color}`}
-          title={`Current status: ${task.status}. Click to change.`}
+          aria-label="Change task status"
+          type="button"
         >
+          <span className="text-base">{currentStatus.icon}</span>
           {currentStatus.label}
+          <FaChevronDown className="text-xs opacity-70" aria-hidden="true" />
         </button>
 
-        {/* Dropdown list */}
         {selectOpen && (
           <ul
-            className="absolute right-0 mt-1 w-32 bg-white border border-gray-300 rounded-md shadow-lg z-50"
+            className="absolute right-0 mt-2 w-44 bg-white/90 backdrop-blur-md border border-gray-200 rounded-lg shadow-xl z-50 animate-fadeIn"
             role="listbox"
             tabIndex={-1}
-            aria-label={`Status options for task ${task.title}`}
           >
-            {statusOptions.map(({ value, label, color }) => (
+            {statusOptions.map(({ value, label, color, icon }) => (
               <li
                 key={value}
-                role="option"
-                aria-selected={value === task.status}
-                tabIndex={0}
                 onClick={() => {
                   onChangeStatus(task.id, value);
                   setSelectOpen(false);
                 }}
+                className={`flex items-center gap-2 cursor-pointer py-2 px-3 ${color} hover:opacity-80 transition`}
+                role="option"
+                aria-selected={currentStatus.value === value}
+                tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
                     onChangeStatus(task.id, value);
                     setSelectOpen(false);
                   }
                 }}
-                className={`cursor-pointer text-sm font-semibold py-2 px-3 hover:bg-indigo-100 focus:bg-indigo-100 focus:outline-none rounded ${value === task.status ? "bg-indigo-100" : ""} ${color}`}
-                title={label}
               >
-                {label}
+                {icon}
+                <span className="font-medium">{label}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      {/* Remove button */}
+      {/* Delete Button */}
       <button
         onClick={() => onRemove(task.id)}
-        aria-label={`Remove task ${task.title}`}
+        className="p-2 rounded-full hover:bg-red-100 text-red-500 hover:text-red-700 transition transform group-hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400"
+        title="Delete task"
+        aria-label="Delete task"
         type="button"
-        className="text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-400 p-2 rounded-md"
-        title="Remove task"
       >
-        <FaTrashAlt className="w-5 h-5" aria-hidden="true" />
+        <FaTrashAlt />
       </button>
+
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full px-3 pb-1 select-none">
+        <div className="w-full bg-gray-100/80 rounded-full h-1 overflow-hidden">
+          <div
+            className={`h-1 rounded-full transition-all duration-300 ${currentStatus.progress}`}
+            style={{ width: statusProgress[task.status] + "%" }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
