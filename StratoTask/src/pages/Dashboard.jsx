@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // use context hook instead of raw auth import
+import { useAuth } from "../context/useAuth"; // use context hook instead of raw auth import
 
 import BoardHeader from "../components/BoardHeader";
 import ListsContainer from "../components/ListsContainer";
@@ -24,12 +24,13 @@ const Dashboard = () => {
     try {
       await logout();
       setSettingsOpen(false);
-      navigate("/auth?mode=login");
+      navigate("/"); // ✅ redirect to home
     } catch (error) {
       alert("Error logging out: " + error.message);
       setIsLoggingOut(false);
     }
   };
+  
 
   const handleNameChanged = (newName) => {
     setUserName(newName);

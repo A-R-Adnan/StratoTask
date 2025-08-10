@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -47,12 +47,13 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/auth?mode=login");
+      navigate("/"); // ✅ redirect to home
       setMenuOpen(false);
     } catch (error) {
       alert("Logout failed: " + error.message);
     }
   };
+  
 
   return (
     <nav className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
