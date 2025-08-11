@@ -1,3 +1,4 @@
+// src/utils/api.js
 import axios from "axios";
 import { auth } from "../firebase/config";
 
@@ -5,11 +6,14 @@ import { auth } from "../firebase/config";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
-// Helper function to get current Firebase Auth token
+// Always get a fresh token before API calls
 async function getAuthToken() {
   const user = auth.currentUser;
   if (!user) throw new Error("User not logged in");
-  return user.getIdToken();
+  // Force refresh to make sure token is valid
+  const token = await user.getIdToken(true);
+  console.log("🔑 Sending token:", token); // Debug
+  return token;
 }
 
 // ---------------------- LIST APIs ---------------------- //
