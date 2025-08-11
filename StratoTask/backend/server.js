@@ -9,7 +9,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173", // Local development frontend
-  "https://stratotask-3.onrender.com" // Production frontend
+  "https://stratotask.onrender.com" // Production frontend
 ];
 
 app.use(
