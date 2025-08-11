@@ -3,6 +3,7 @@
 **StratoTask** is a modern, responsive Kanban-style task management app for teams and individuals.
 
 It features secure Firebase authentication (email/password & Google OAuth), lightning-fast UI built with **React & TailwindCSS**, a PostgreSQL backend (Node.js/Express), glassy, mobile-ready design, and real-time task organization. Designed to be flexible, accessible, and open-source, it's perfect for personal or team productivity.
+[Live Server]([https://your-live-server-url.com](https://stratotask.onrender.com))
 
 ---
 
