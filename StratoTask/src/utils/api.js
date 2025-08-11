@@ -1,7 +1,7 @@
 import axios from "axios";
 import { auth } from "../firebase/config";
 
-const API_BASE_URL = "http://localhost:5000/api"; // Update if needed
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 async function getAuthToken() {
     const user = auth.currentUser; // Use imported auth!

@@ -5,7 +5,16 @@ const authRouter = require("./routes/auth");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",               // Local development
+  "https://your-frontend.onrender.com"   // Production frontend
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
